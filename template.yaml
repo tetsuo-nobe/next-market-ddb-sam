@@ -1,0 +1,235 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  next-market-ddb-sam
+
+  Sample SAM Template for next-market-ddb-sam
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 10
+
+Parameters:
+  USERTABLE: 
+    Default: "next-market-ddb-user"
+    Description: "user table"
+    Type: String
+  ITEMTABLE: 
+    Default: "next-market-ddb-item"
+    Description: "item table"
+    Type: String
+Resources:
+  # 全アイテム取得関数
+  ReadAllFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      FunctionName: next-market-ddb-readall
+      CodeUri: next-market-ddb-readall/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment: 
+        Variables:
+          TABLE_NAME: !Ref ITEMTABLE
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchLogsFullAccess
+        - AWSXrayFullAccess
+      Events:
+        Login:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref NextMarketDDBAPI
+            Path: /item/readall
+            Method: get
+  # 単一アイテム取得関数
+  ReadSingleFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      FunctionName: next-market-ddb-readsingle
+      CodeUri: next-market-ddb-readsingle/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment: 
+        Variables:
+          TABLE_NAME: !Ref ITEMTABLE
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchLogsFullAccess
+        - AWSXrayFullAccess
+      Events:
+        Login:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref NextMarketDDBAPI
+            Path: /item/readsingle/{id}
+            Method: get
+  # アイテム更新関数
+  UpdateFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      FunctionName: next-market-ddb-update
+      CodeUri: next-market-ddb-update/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment: 
+        Variables:
+          TABLE_NAME: !Ref ITEMTABLE
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchLogsFullAccess
+        - AWSXrayFullAccess
+      Events:
+        Login:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref NextMarketDDBAPI
+            Path: /item/update/{id}
+            Method: put
+  # アイテム作成関数
+  CreateFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      FunctionName: next-market-ddb-create
+      CodeUri: next-market-ddb-create/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment: 
+        Variables:
+          TABLE_NAME: !Ref ITEMTABLE
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchLogsFullAccess
+        - AWSXrayFullAccess
+      Events:
+        Login:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref NextMarketDDBAPI
+            Path: /item/create
+            Method: post
+  # アイテム削除関数
+  DeleteFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      FunctionName: next-market-ddb-delete
+      CodeUri: next-market-ddb-delete/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment: 
+        Variables:
+          TABLE_NAME: !Ref ITEMTABLE
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchLogsFullAccess
+        - AWSXrayFullAccess
+      Events:
+        Login:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref NextMarketDDBAPI
+            Path: /item/delete/{id}
+            Method: delete
+  # ユーザー登録関数
+  RegisterFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      FunctionName: next-market-ddb-register
+      CodeUri: next-market-ddb-register/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment: 
+        Variables:
+          TABLE_NAME: !Ref USERTABLE
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchLogsFullAccess
+        - AWSXrayFullAccess
+      Events:
+        Login:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref NextMarketDDBAPI
+            Path: /user/register
+            Method: post
+  # ユーザーログイン関数
+  LoginFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      FunctionName: next-market-ddb-login
+      CodeUri: next-market-ddb-login/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment: 
+        Variables:
+          TABLE_NAME: !Ref USERTABLE
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchLogsFullAccess
+        - AWSXrayFullAccess
+      Events:
+        Login:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref NextMarketDDBAPI
+            Path: /user/login
+            Method: post
+  # API 
+  NextMarketDDBAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: next-market-ddb-api
+      StageName: dev
+      EndpointConfiguration:
+        Type: REGIONAL
+      GatewayResponses:
+        DEFAULT_5XX:
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'OPTIONS,GET,POST,PUT,DELETE'"
+          ResponseTemplates:
+            application/json: "{\"message\": \"Error $context.error.messageString \" }"
+        DEFAULT_4XX:
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'OPTIONS,GET,POST,PUT,DELETE'"
+          ResponseTemplates:
+            application/json: "{\"message\": \"Error $context.error.messageString \" }"            
+      Cors:
+        AllowOrigin: "'*'"
+        AllowMethods: "'OPTIONS,POST,PUT,GET,DELETE'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+  # ユーザーテーブル
+  UserTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: !Ref USERTABLE
+      PrimaryKey:
+        Name: email
+        Type: String
+  # アイテムテーブル
+  ItemTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: !Ref ITEMTABLE
+      PrimaryKey:
+        Name: _id
+        Type: String
