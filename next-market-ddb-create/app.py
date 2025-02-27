@@ -2,6 +2,9 @@ import json
 import boto3
 import os
 import uuid
+from aws_xray_sdk.core import patch
+patch(['boto3'])          # Lambda関数から呼び出しているサービスのトレースを取得
+
 
 ddb = boto3.client("dynamodb")
 table_name = os.environ["TABLE_NAME"]

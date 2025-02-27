@@ -9,6 +9,9 @@ Description: >
 Globals:
   Function:
     Timeout: 10
+    Tracing: Active # Lambda での X-Ray 有効化
+  Api:
+    TracingEnabled: True # API Gateway での X-Ray 有効化
 
 Parameters:
   USERTABLE: 
