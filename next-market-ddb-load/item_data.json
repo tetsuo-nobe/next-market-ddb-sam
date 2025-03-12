@@ -1,0 +1,11 @@
+[
+    {"email": "init@example.com", "title": "メガネ", "price": 20000, "description": "使いやすいメガネです。","image": "https://d2baas3wofcwk3.cloudfront.net/images/img1.jpg"},
+    {"email": "init@example.com", "title": "色えんぴつ", "price": 2000, "description": "使いやすい色えんぴつです。","image": "https://d2baas3wofcwk3.cloudfront.net/images/img2.jpg"},
+    {"email": "init@example.com", "title": "リング", "price": 3000, "description": "使いやすいリングです。","image": "https://d2baas3wofcwk3.cloudfront.net/images/img3.jpg"},
+    {"email": "init@example.com", "title": "フライパン", "price": 4000, "description": "使いやすいフライパンです。","image": "https://d2baas3wofcwk3.cloudfront.net/images/img4.jpg"},
+    {"email": "init@example.com", "title": "Mac Book", "price": 250000, "description": "使いやすい Mac Book です。","image": "https://d2baas3wofcwk3.cloudfront.net/images/img5.jpg"},
+    {"email": "init@example.com", "title": "スケッチブック", "price": 2600, "description": "使いやすいスケッチブックです。","image": "https://d2baas3wofcwk3.cloudfront.net/images/img6.jpg"},
+    {"email": "init@example.com", "title": "アダプタ", "price": 2700, "description": "使いやすいアダプタです。","image": "https://d2baas3wofcwk3.cloudfront.net/images/img7.jpg"}
+    
+
+  ]

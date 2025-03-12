@@ -27,7 +27,7 @@ Resources:
   ReadAllFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      FunctionName: next-market-ddb-readall
+      FunctionName: !Sub "${AWS::StackName}-readall"
       CodeUri: next-market-ddb-readall/
       Handler: app.lambda_handler
       Runtime: python3.12
@@ -51,7 +51,7 @@ Resources:
   ReadSingleFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      FunctionName: next-market-ddb-readsingle
+      FunctionName: !Sub "${AWS::StackName}-readsingle"
       CodeUri: next-market-ddb-readsingle/
       Handler: app.lambda_handler
       Runtime: python3.12
@@ -75,7 +75,7 @@ Resources:
   UpdateFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      FunctionName: next-market-ddb-update
+      FunctionName: !Sub "${AWS::StackName}-update"
       CodeUri: next-market-ddb-update/
       Handler: app.lambda_handler
       Runtime: python3.12
@@ -99,7 +99,7 @@ Resources:
   CreateFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      FunctionName: next-market-ddb-create
+      FunctionName: !Sub "${AWS::StackName}-create"
       CodeUri: next-market-ddb-create/
       Handler: app.lambda_handler
       Runtime: python3.12
@@ -123,7 +123,7 @@ Resources:
   DeleteFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      FunctionName: next-market-ddb-delete
+      FunctionName: !Sub "${AWS::StackName}-delete"
       CodeUri: next-market-ddb-delete/
       Handler: app.lambda_handler
       Runtime: python3.12
@@ -143,11 +143,28 @@ Resources:
             RestApiId: !Ref NextMarketDDBAPI
             Path: /item/delete/{id}
             Method: delete
+  # アイテム初期ロード関数(デプロイ後に手動実行を想定)
+  CreateFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-load"
+      CodeUri: next-market-ddb-load/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment: 
+        Variables:
+          TABLE_NAME: !Ref ITEMTABLE
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchLogsFullAccess
+        - AWSXrayFullAccess
   # ユーザー登録関数
   RegisterFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      FunctionName: next-market-ddb-register
+      FunctionName: !Sub "${AWS::StackName}-register"
       CodeUri: next-market-ddb-register/
       Handler: app.lambda_handler
       Runtime: python3.12
@@ -171,7 +188,7 @@ Resources:
   LoginFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      FunctionName: next-market-ddb-login
+      FunctionName: !Sub "${AWS::StackName}-login"
       CodeUri: next-market-ddb-login/
       Handler: app.lambda_handler
       Runtime: python3.12
